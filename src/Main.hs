@@ -2,14 +2,7 @@ module Main where
 import Data.String (String)
 import Data.Map (Map, empty, insert)
 
-data JSValue = JSObject (Map String JSValue)
-  | JSArray [JSValue]
-  | JSString [Char]
-  | JSNumber Double
-  | JSBool Bool
-  | JSNull
-  | JSUndefined
-  deriving Show
+{-- Helper Methods --}
 
 skip :: String -> String
 skip [] = []
@@ -22,6 +15,27 @@ skip xs = xs
 digit :: Char -> Bool
 digit '0' = True
 digit x = x >= '1' && x <= '9'
+
+escaped :: Char -> Char
+escaped '"' = '"'
+escaped '\\' = '\\'
+escaped '/' = '/'
+escaped 'b' = '\b'
+escaped 'f' = '\f'
+escaped 'r' = '\r'
+escaped 'n' = '\n'
+escaped 't' = '\t'
+
+{-- Parser --}
+
+data JSValue = JSObject (Map String JSValue)
+  | JSArray [JSValue]
+  | JSString [Char]
+  | JSNumber Double
+  | JSBool Bool
+  | JSNull
+  | JSUndefined
+  deriving Show
 
 extractInteger :: String -> (String, String)
 extractInteger [] = ([], [])
@@ -45,16 +59,6 @@ parseDouble xs
 parseNumber :: String -> (JSValue, String)
 parseNumber xs = (JSNumber result, rest)
   where (result, rest) = parseDouble xs
-
-escaped :: Char -> Char
-escaped '"' = '"'
-escaped '\\' = '\\'
-escaped '/' = '/'
-escaped 'b' = '\b'
-escaped 'f' = '\f'
-escaped 'r' = '\r'
-escaped 'n' = '\n'
-escaped 't' = '\t'
 
 parseStringInner :: String -> (String, String)
 parseStringInner ('"':xs) = ("", xs)
@@ -110,6 +114,8 @@ parseJsonInner (x:xs)
 
 parseJson :: String -> (JSValue, String)
 parseJson xs = parseJsonInner (skip xs)
+
+{-- Example Usage --}
 
 main :: IO ()
 main = do
