@@ -35,7 +35,6 @@ data JSValue = JSObject (Map String JSValue)
   | JSNumber Double
   | JSBool Bool
   | JSNull
-  | JSUndefined
   deriving Show
 
 -- If 'null' return JSNull and drop the keyword from the string.
