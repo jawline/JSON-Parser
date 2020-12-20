@@ -14,8 +14,7 @@ skip ('\t':xs) = skip xs
 skip xs = xs
 
 digit :: Char -> Bool
-digit '0' = True
-digit x = x >= '1' && x <= '9'
+digit x = x >= '0' && x <= '9'
 
 escaped :: Char -> Char
 escaped '"' = '"'
